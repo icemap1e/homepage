@@ -125,7 +125,7 @@ const CONFIG = {
     // 天气 API 配置
     weather: {
         apiKey: '384bcd9d290047a58b50968af59704ad',
-        apiUrl: 'https://devapi.qweather.com/v7/weather/now',
-        geoUrl: 'https://geoapi.qweather.com/v2/city/lookup'
+        apiUrl: 'https://api.qweather.com/v7/weather/now',
+        geoUrl: 'https://api.qweather.com/v2/city/lookup'
     }
 }; 

@@ -69,10 +69,12 @@ body {
 
 /* 搜索栏样式 */
 .search-container {
+    position: relative;
+    z-index: 1000;
     margin: 0 auto 1rem;
     order: 1;
     max-width: 800px;
-    position: relative;
+    width: 100%;
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -86,6 +88,7 @@ body {
 /* 搜索引擎选择器样式 */
 .search-engine-selector {
     position: relative;
+    z-index: 1001;
     background: var(--card-background);
     border-radius: var(--border-radius);
     padding: 0.5rem;
@@ -94,7 +97,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 100;
     height: 56px; /* 与搜索框高度对齐 */
     transform-style: preserve-3d;
     backface-visibility: hidden;
@@ -125,7 +127,10 @@ body {
     transition: all var(--transition-speed);
 }
 
+/* 搜索框样式 */
 .search-box {
+    position: relative;
+    z-index: 1001;
     display: flex;
     align-items: center;
     background: var(--card-background);
@@ -264,6 +269,7 @@ body {
 
 /* 卡片容器样式 */
 .cards-container {
+    z-index: auto;
     display: grid;
     grid-template-columns: repeat(auto-fit, 240px);
     justify-content: center;
@@ -561,12 +567,14 @@ body {
     position: relative;
     transform-style: preserve-3d;
     backface-visibility: hidden;
+    z-index: 1; /* 确保不会被搜索建议遮挡 */
 }
 
 .weather-main {
     display: flex;
     align-items: flex-start;
     gap: 1rem;
+    width: 100%;
 }
 
 .weather-icon {
@@ -590,6 +598,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
+    min-width: 0; /* 防止内容溢出 */
 }
 
 .weather-info .city {
@@ -597,6 +606,9 @@ body {
     font-weight: 500;
     color: var(--text-color);
     margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .weather-info .temperature {
@@ -611,6 +623,9 @@ body {
     color: var(--text-color);
     opacity: 0.8;
     margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* 刷新按钮样式 */
@@ -626,7 +641,7 @@ body {
     transition: all var(--transition-speed);
     color: var(--text-color);
     opacity: 0.5;
-    z-index: 1;
+    z-index: 2;
 }
 
 .refresh-location:hover {
@@ -957,13 +972,17 @@ body {
     border-radius: var(--border-radius);
     max-height: 300px;
     overflow-y: auto;
-    z-index: 1000;
+    z-index: 1002;
     border: 1.5px solid var(--border-color);
     box-shadow: var(--card-shadow);
     padding: 6px;
+    width: calc(100% - 48px - 2rem);
+    max-width: 800px;
 }
 
 .suggestion-item {
+    position: relative;
+    z-index: 1002;
     padding: 12px 16px;
     cursor: pointer;
     color: var(--text-color);
@@ -973,7 +992,6 @@ body {
     font-size: 14px;
     margin: 2px 0;
     border-radius: 8px;
-    position: relative;
     overflow: hidden;
     border: 1px solid transparent;
 }
@@ -1006,6 +1024,14 @@ body {
 
     .search-box {
         width: 100%;
+    }
+
+    .suggestions-container {
+        left: 1rem;
+        right: 1rem;
+        width: calc(100% - 2rem);
+        max-width: none;
+        z-index: 1002;
     }
 }
 

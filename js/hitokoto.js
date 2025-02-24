@@ -30,7 +30,12 @@ class HitokotoManager {
         try {
             // 并行请求多条一言
             const promises = Array(this.cacheSize).fill().map(() => 
-                fetch('https://v1.hitokoto.cn')
+                fetch('https://v1.hitokoto.cn/', {
+                    mode: 'cors',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                })
                     .then(response => response.json())
             );
             
@@ -42,7 +47,12 @@ class HitokotoManager {
 
     async fetchHitokoto() {
         try {
-            const response = await fetch('https://v1.hitokoto.cn');
+            const response = await fetch('https://v1.hitokoto.cn/', {
+                mode: 'cors',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
             const data = await response.json();
             return data;
         } catch (error) {
