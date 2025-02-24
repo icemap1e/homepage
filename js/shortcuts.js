@@ -1,17 +1,25 @@
 class ShortcutsManager {
     constructor() {
-        this.container = document.getElementById('shortcuts-grid');
-        this.colors = [
-            { color: 'var(--google-blue)', bg: 'rgba(66, 133, 244, 0.1)' },
-            { color: 'var(--google-red)', bg: 'rgba(219, 68, 55, 0.1)' },
-            { color: 'var(--google-yellow)', bg: 'rgba(244, 180, 0, 0.1)' },
-            { color: 'var(--google-green)', bg: 'rgba(15, 157, 88, 0.1)' }
-        ];
-        this.currentMode = localStorage.getItem('mode') || CONFIG.defaults.mode;
-        this.init();
+        // 确保在 DOM 加载完成后再获取元素
+        document.addEventListener('DOMContentLoaded', () => {
+            this.container = document.getElementById('shortcuts-grid');
+            this.colors = [
+                { color: 'var(--google-blue)', bg: 'rgba(66, 133, 244, 0.1)' },
+                { color: 'var(--google-red)', bg: 'rgba(219, 68, 55, 0.1)' },
+                { color: 'var(--google-yellow)', bg: 'rgba(244, 180, 0, 0.1)' },
+                { color: 'var(--google-green)', bg: 'rgba(15, 157, 88, 0.1)' }
+            ];
+            this.currentMode = localStorage.getItem('mode') || CONFIG.defaults.mode;
+            this.init();
+        });
     }
 
     init() {
+        if (!this.container) {
+            console.error('Shortcuts container not found');
+            return;
+        }
+
         this.renderShortcuts();
         this.setupHoverEffects();
         this.initModeToggle();
@@ -108,10 +116,8 @@ class ShortcutsManager {
     }
 }
 
-// 确保在 DOM 加载完成后初始化
-document.addEventListener('DOMContentLoaded', () => {
-    const shortcutsManager = new ShortcutsManager();
-});
+// 创建快捷方式管理器实例
+const shortcutsManager = new ShortcutsManager();
 
 // 在创建快捷方式卡片时添加随机主题色
 function createShortcutCard(shortcut) {

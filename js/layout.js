@@ -1,12 +1,20 @@
 class LayoutManager {
     constructor() {
-        this.container = document.querySelector('.container');
-        this.layoutToggle = document.getElementById('layoutToggle');
-        this.currentLayout = localStorage.getItem('layout') || 'classic';
-        this.init();
+        // 确保在 DOM 加载完成后再获取元素
+        document.addEventListener('DOMContentLoaded', () => {
+            this.container = document.querySelector('.container');
+            this.layoutToggle = document.getElementById('layoutToggle');
+            this.currentLayout = localStorage.getItem('layout') || 'classic';
+            this.init();
+        });
     }
 
     init() {
+        if (!this.container || !this.layoutToggle) {
+            console.error('Layout elements not found');
+            return;
+        }
+
         // 设置初始布局
         this.setLayout(this.currentLayout);
         
@@ -54,7 +62,5 @@ class LayoutManager {
     }
 }
 
-// 初始化布局管理器
-document.addEventListener('DOMContentLoaded', () => {
-    const layoutManager = new LayoutManager();
-}); 
+// 创建布局管理器实例
+const layoutManager = new LayoutManager(); 
