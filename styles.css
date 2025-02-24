@@ -1,0 +1,13 @@
+.mode-toggle {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    margin-left: 0.5rem;
+}
+
+.mode-toggle:hover {
+    color: var(--accent-color);
+} 

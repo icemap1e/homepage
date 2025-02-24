@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人导航页</title>
+    
+    <!-- 本地字体 -->
+    <style>
+        @font-face {
+            font-family: 'Material Icons';
+            font-style: normal;
+            font-weight: 400;
+            src: url('./assets/fonts/MaterialIcons-Regular.woff2') format('woff2');
+        }
+        
+        .material-icons {
+            font-family: 'Material Icons';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        .suggestions-container {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 48px;
+            right: 0;
+            background: var(--background-color);
+            border-radius: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            border: 1.5px solid var(--border-color);  /* 明显的边框 */
+            box-shadow: var(--card-shadow);  /* 保持阴影 */
+            padding: 6px;
+        }
+
+        .suggestion-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            margin: 2px 0;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid transparent;  /* 为悬停效果预留边框空间 */
+        }
+
+        .suggestion-item::before {
+            content: 'search';
+            font-family: 'Material Icons';
+            margin-right: 12px;
+            font-size: 20px;
+            color: var(--secondary-text-color);
+            opacity: 0.7;
+            transition: all 0.2s ease;
+        }
+
+        .suggestion-item:hover {
+            background-color: rgba(66, 133, 244, 0.1);  /* Google 蓝色带透明度 */
+            color: #4285F4;  /* Google 蓝色 */
+            transform: translateX(4px);
+            font-weight: 500;
+            border-color: #4285F4;  /* 添加边框 */
+        }
+
+        .suggestion-item:hover::before {
+            color: #4285F4;  /* Google 蓝色 */
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .suggestion-item:active {
+            transform: translateX(2px);
+            background-color: rgba(66, 133, 244, 0.2);  /* 点击时加深背景色 */
+            opacity: 0.9;
+        }
+
+        /* 移除之前的首尾圆角样式 */
+        .suggestion-item:first-child,
+        .suggestion-item:last-child {
+            border-radius: 8px;
+        }
+
+        /* 自定义滚动条样式 */
+        .suggestions-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .suggestions-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .suggestions-container::-webkit-scrollbar-thumb {
+            background-color: var(--border-color);
+            border-radius: 4px;
+        }
+
+        .search-container {
+            position: relative;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- 在主题切换按钮旁添加模式切换按钮 -->
+    <div class="header">
+        <div class="right-buttons">
+            <button id="layoutToggle" class="layout-toggle" title="切换布局">
+                <i class="material-icons">dashboard</i>
+            </button>
+            <button id="modeToggle" class="mode-toggle">
+                <i class="material-icons">weekend</i>
+            </button>
+            <button id="theme-toggle" class="theme-toggle">
+                <i class="material-icons">dark_mode</i>
+            </button>
+        </div>
+    </div>
+
+    <!-- 主要内容容器 -->
+    <div class="container">
+        <!-- 快捷方式网格 -->
+        <div class="shortcuts-grid" id="shortcuts-grid">
+            <!-- 快捷方式卡片将通过 JavaScript 动态添加 -->
+        </div>
+
+        <!-- 一言显示 -->
+        <div class="hitokoto-container">
+            <div class="hitokoto-content">
+                <span id="hitokoto-text">生活明朗，万物可爱</span>
+            </div>
+            <div class="hitokoto-from">
+                <span id="hitokoto-from">- 「等待加载中...」</span>
+            </div>
+        </div>
+
+        <!-- 搜索栏 -->
+        <div class="search-container">
+            <div class="search-engine-selector">
+                <button id="current-engine" class="engine-button">
+                    <img id="engine-icon" src="" alt="搜索引擎">
+                </button>
+                <div class="engine-dropdown" id="engine-dropdown">
+                    <!-- 搜索引擎选项将通过 JavaScript 动态添加 -->
+                </div>
+            </div>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="搜索...">
+                <button id="search-button">
+                    <span class="material-icons">search</span>
+                </button>
+            </div>
+            <div id="suggestions" class="suggestions-container"></div>
+        </div>
+
+        <!-- 天气卡片 -->
+        <div class="cards-container">
+            <!-- 时间卡片 -->
+            <div class="time-card" id="time-card">
+                <div class="time-main">
+                    <div class="time-icon">
+                        <span class="material-icons">schedule</span>
+                    </div>
+                    <div class="time-info">
+                        <h3 class="date">日期加载中...</h3>
+                        <p class="time">--:--</p>
+                        <p class="week">星期-</p>
+                    </div>
+                </div>
+                <div class="calendar">
+                    <div class="calendar-item">
+                        <span class="material-icons">event</span>
+                        <span>农历: <span id="lunar-date">加载中...</span></span>
+                    </div>
+                    <div class="calendar-item">
+                        <span class="material-icons">eco</span>
+                        <span>节气: <span id="solar-term">加载中...</span></span>
+                    </div>
+                    <div class="calendar-item">
+                        <span class="material-icons">celebration</span>
+                        <span id="festival">加载中...</span>
+                    </div>
+                    <div class="calendar-item">
+                        <span class="material-icons">schedule</span>
+                        <span id="off-work">加载中...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="weather-card" id="weather-card">
+                <button class="refresh-location" id="refresh-location">
+                    <span class="material-icons">my_location</span>
+                </button>
+                <div class="weather-icon">
+                    <span class="material-icons">cloud</span>
+                </div>
+                <div class="weather-info">
+                    <h3 class="city">加载中...</h3>
+                    <p class="temperature">--°C</p>
+                    <p class="description">获取天气信息...</p>
+                </div>
+            </div>
+
+            <!-- 健康提醒卡片 -->
+            <div class="health-card" id="health-card">
+                <div class="health-main">
+                    <div class="health-icon">
+                        <span class="material-icons">favorite</span>
+                    </div>
+                    <div class="health-info">
+                        <h3>下次休息</h3>
+                        <p class="next-break">41分钟后</p>
+                        <p class="status">状态良好</p>
+                    </div>
+                </div>
+                <div class="health-details">
+                    <div class="health-item">
+                        <span class="material-icons">local_drink</span>
+                        <span>上次喝水: <span id="water-timer">0分钟</span></span>
+                        <button class="reset-timer" data-type="water">
+                            <span class="material-icons">refresh</span>
+                        </button>
+                    </div>
+                    <div class="health-item">
+                        <span class="material-icons">visibility</span>
+                        <span>上次休息: <span id="rest-timer">0分钟</span></span>
+                        <button class="reset-timer" data-type="rest">
+                            <span class="material-icons">refresh</span>
+                        </button>
+                    </div>
+                    <div class="health-item">
+                        <span class="material-icons">directions_run</span>
+                        <span>上次运动: <span id="exercise-timer">0分钟</span></span>
+                        <button class="reset-timer" data-type="exercise">
+                            <span class="material-icons">refresh</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 备忘录卡片 -->
+            <div class="memo-card" id="memo-card">
+                <div class="memo-main">
+                    <div class="memo-icon">
+                        <span class="material-icons">note_alt</span>
+                    </div>
+                    <div class="memo-info">
+                        <h3>备忘录</h3>
+                        <p class="memo-count">共 <span id="memo-total">0</span> 条记录</p>
+                        <p class="memo-latest">最新添加: <span id="memo-latest">无</span></p>
+                    </div>
+                </div>
+                <div class="memo-details" id="memo-list">
+                    <!-- 备忘录项目将通过 JS 动态添加 -->
+                </div>
+                <button class="add-memo" id="add-memo">
+                    <span class="material-icons">add</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript 文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/lunar-javascript/lunar.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/search.js"></script>
+    <script src="js/shortcuts.js"></script>
+    <script src="js/weather.js"></script>
+    <script src="js/time.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/health.js"></script>
+    <script src="js/memo.js"></script>
+    <script src="js/hitokoto.js"></script>
+    <script src="js/layout.js"></script>
+</body>
+</html> 

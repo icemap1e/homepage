@@ -1,0 +1,1412 @@
+:root {
+    /* Material Design 颜色 */
+    --google-blue: #4285F4;
+    --google-red: #DB4437;
+    --google-yellow: #F4B400;
+    --google-green: #0F9D58;
+    
+    /* 动画时间 */
+    --transition-speed: 0.3s;
+    
+    /* 统一圆角大小 */
+    --border-radius: 12px;
+
+    /* 卡片主题色 */
+    --time-color: var(--google-blue);     /* 蓝色 */
+    --weather-color: var(--google-green);  /* 绿色 */
+    --health-color: var(--google-yellow);  /* 黄色 */
+    --memo-color: var(--google-red);       /* 红色 */
+
+    /* 浅色主题默认值 */
+    --background-color: #f5f5f5;
+    --card-background: #ffffff;
+    --text-color: #333333;
+    --text-secondary: #666666;
+    --shadow-color: rgba(0, 0, 0, 0.05);
+    --border-color: rgba(0, 0, 0, 0.1);
+    --card-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 深色主题 */
+body.dark-theme {
+    --background-color: #1a1a1a;
+    --card-background: #2d2d2d;
+    --text-color: #ffffff;
+    --text-secondary: #cccccc;
+    --shadow-color: rgba(0, 0, 0, 0.2);
+    --border-color: rgba(255, 255, 255, 0.1);
+    --card-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    transition: background-color 0.3s ease, 
+                color 0.3s ease, 
+                border-color 0.3s ease, 
+                box-shadow 0.3s ease;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem;  /* 与顶部按钮对齐 */
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    perspective: 2000px;
+    transform-style: preserve-3d;
+}
+
+/* 搜索栏样式 */
+.search-container {
+    margin: 0 auto 1rem;
+    order: 1;
+    max-width: 800px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: top center;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 搜索引擎选择器样式 */
+.search-engine-selector {
+    position: relative;
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    padding: 0.5rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all var(--transition-speed);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    height: 56px; /* 与搜索框高度对齐 */
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+}
+
+.search-engine-selector:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.engine-button {
+    padding: 0.5rem;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: all var(--transition-speed);
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.engine-button img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    transition: all var(--transition-speed);
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    padding: 0.75rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all var(--transition-speed);
+    gap: 0.5rem;
+    flex: 1;
+    min-width: 0; /* 防止搜索框溢出容器 */
+    height: 56px; /* 固定搜索框高度 */
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+}
+
+.search-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.search-box input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    background: transparent;
+    color: var(--text-color);
+}
+
+.search-box button {
+    background: transparent;
+    border: none;
+    padding: 0.75rem;
+    cursor: pointer;
+    color: var(--text-color);
+    border-radius: 50%;
+    transition: all var(--transition-speed);
+}
+
+.search-box button:hover {
+    background: var(--shadow-color);
+}
+
+.search-box button .material-icons {
+    font-size: 1.5rem;
+}
+
+/* 快捷方式网格样式 */
+.shortcuts-grid {
+    order: 3;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1.5rem;
+    margin: 0 auto;
+    width: 100%;
+    padding-right: 3rem; /* 改用内边距避免与按钮重叠 */
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: top center;
+    transform-style: preserve-3d;
+    perspective: 2000px;
+}
+
+/* 快捷方式卡片样式 */
+.shortcut-card {
+    background: transparent;
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    cursor: pointer;
+    transition: all var(--transition-speed);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid transparent;
+    position: relative;
+    text-decoration: none;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.shortcut-card .material-icons {
+    font-size: 1.75rem;
+    color: var(--google-blue);
+    opacity: 1;
+    transition: all var(--transition-speed);
+}
+
+.shortcut-card h3 {
+    font-size: 0.9rem;
+    font-weight: 400;
+    text-align: center;
+    color: var(--text-color);
+    opacity: 0.8;
+    transition: all var(--transition-speed);
+}
+
+/* 娱乐模式悬停效果 */
+.shortcut-card:hover {
+    transform: translateY(-2px) scale(1.02);
+    background: var(--hover-color, var(--google-blue));
+}
+
+.shortcut-card:hover .material-icons {
+    color: white;
+    opacity: 0.9;
+}
+
+.shortcut-card:hover h3 {
+    color: white;
+    font-weight: 500;
+    opacity: 1;
+}
+
+/* 娱乐模式点击效果 */
+.shortcut-card:active {
+    transform: translateY(-1px) scale(0.98);
+    opacity: 0.9;
+}
+
+/* 工作模式下的快捷方式不受上述样式影响 */
+.work-mode .shortcut-card:hover {
+    transform: none;
+    background: var(--card-background);
+}
+
+.work-mode .shortcut-card:hover .material-icons {
+    color: var(--text-color);
+}
+
+.work-mode .shortcut-card:hover h3 {
+    color: var(--text-color);
+}
+
+/* 卡片容器样式 */
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 240px);
+    justify-content: center;
+    gap: 2rem;
+    margin: 2rem auto;
+    max-width: 1200px;
+    transform-style: preserve-3d;
+    perspective: 2000px;
+}
+
+/* 健康卡片和备忘录卡片的通用样式 */
+.health-card,
+.memo-card {
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: var(--card-shadow);
+    width: 240px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: relative;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+}
+
+/* 主要内容样式 */
+.health-main,
+.memo-main {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+/* 图标样式 */
+.health-icon,
+.memo-icon {
+    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* 分别设置图标背景色 */
+.health-icon {
+    background: var(--health-color);
+}
+
+.memo-icon {
+    background: var(--memo-color);
+}
+
+/* 图标内的图标样式 */
+.health-icon .material-icons,
+.memo-icon .material-icons {
+    color: white;
+    font-size: 24px;
+}
+
+/* 信息区域样式 */
+.health-info,
+.memo-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.health-info h3,
+.memo-info h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.next-break,
+.memo-count {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.status,
+.memo-latest {
+    font-size: 0.875rem;
+    color: var(--text-color);
+    opacity: 0.8;
+    margin: 0;
+}
+
+/* 详细信息区域样式统一 */
+.weather-details,
+.health-details,
+.memo-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--shadow-color);
+}
+
+/* 列表项样式统一 */
+.weather-detail-item,
+.health-item,
+.memo-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-color);
+    opacity: 0.8;
+    font-size: 0.875rem;
+}
+
+/* 图标样式统一 */
+.weather-detail-item .material-icons {
+    color: var(--weather-color);
+    font-size: 1.25rem;
+    opacity: 0.8;
+}
+
+.health-item .material-icons {
+    color: var(--health-color);
+    font-size: 1.25rem;
+    opacity: 0.8;
+}
+
+.memo-item .material-icons {
+    color: var(--memo-color);
+    font-size: 1.25rem;
+    opacity: 0.8;
+}
+
+/* 工作模式下覆盖图标颜色 */
+.work-mode .weather-detail-item .material-icons,
+.work-mode .health-item .material-icons,
+.work-mode .memo-item .material-icons {
+    color: var(--text-secondary) !important;
+}
+
+/* 文本内容样式统一 */
+.weather-detail-item span:last-child,
+.health-item span:not(.material-icons),
+.memo-item .memo-content {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 按钮样式统一 */
+.reset-timer,
+.delete-btn {
+    background: transparent;
+    border: none;
+    padding: 0.25rem;
+    cursor: pointer;
+    border-radius: 50%;
+    color: var(--text-color);
+    opacity: 0.5;
+    transition: all var(--transition-speed);
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.reset-timer:hover,
+.delete-btn:hover {
+    opacity: 1;
+    background: var(--shadow-color);
+}
+
+.delete-btn {
+    color: var(--google-red);
+}
+
+.delete-btn:hover {
+    background: rgba(219, 68, 55, 0.1);
+}
+
+/* 警告状态样式 */
+.health-item.warning {
+    color: var(--health-color);
+    opacity: 1;
+}
+
+.health-item.warning .material-icons {
+    color: var(--health-color);
+    opacity: 1;
+}
+
+/* 时间卡片样式 */
+.time-card,
+#time-display {
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: var(--card-shadow);
+    width: 240px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.time-main {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.time-icon {
+    background: var(--time-color);
+    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;  /* 防止图标缩小 */
+}
+
+.time-icon .material-icons {
+    color: white;
+    font-size: 24px;
+}
+
+.time-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.time-info .date {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.time-info .time {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.time-info .week {
+    font-size: 0.875rem;
+    color: var(--text-color);
+    opacity: 0.8;
+    margin: 0;
+}
+
+.calendar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--shadow-color);  /* 添加分隔线 */
+}
+
+.calendar-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-color);
+    opacity: 0.8;
+    font-size: 0.875rem;
+}
+
+.calendar-item .material-icons {
+    font-size: 1.25rem;
+    color: var(--time-color);
+}
+
+/* 天气卡片样式 */
+.weather-card {
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: var(--card-shadow);
+    width: 240px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: relative;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+}
+
+.weather-main {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.weather-icon {
+    background: var(--weather-color);
+    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.weather-icon .material-icons {
+    color: white;
+    font-size: 24px;
+}
+
+.weather-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.weather-info .city {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.weather-info .temperature {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.weather-info .description {
+    font-size: 0.875rem;
+    color: var(--text-color);
+    opacity: 0.8;
+    margin: 0;
+}
+
+/* 刷新按钮样式 */
+.refresh-location {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: transparent;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all var(--transition-speed);
+    color: var(--text-color);
+    opacity: 0.5;
+    z-index: 1;
+}
+
+.refresh-location:hover {
+    opacity: 1;
+    background: var(--shadow-color);
+}
+
+/* 头部按钮容器样式 */
+.header {
+    position: fixed;
+    top: 1.5rem;
+    right: 1rem;
+    z-index: 1000;
+}
+
+.right-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* 右上角按钮基础样式 */
+.layout-toggle,
+.mode-toggle,
+.theme-toggle {
+    background: var(--card-background);
+    border: none;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all var(--transition-speed);
+}
+
+/* 右上角按钮图标基础样式 */
+.layout-toggle i,
+.mode-toggle i,
+.theme-toggle i {
+    font-size: 24px;
+    transition: all var(--transition-speed);
+}
+
+/* 娱乐模式下的按钮图标颜色 */
+.layout-toggle i {
+    color: var(--google-blue);
+}
+
+.mode-toggle i {
+    color: var(--google-yellow);
+}
+
+.theme-toggle i {
+    color: var(--google-green);
+}
+
+/* 娱乐模式下的按钮悬停效果 */
+.layout-toggle:hover i {
+    color: var(--google-blue);
+    opacity: 0.8;
+}
+
+.mode-toggle:hover i {
+    color: var(--google-yellow);
+    opacity: 0.8;
+}
+
+.theme-toggle:hover i {
+    color: var(--google-green);
+    opacity: 0.8;
+}
+
+/* 工作模式下的按钮样式覆盖 */
+.work-mode .theme-toggle i,
+.work-mode .mode-toggle i,
+.work-mode .layout-toggle i {
+    color: var(--text-color);
+}
+
+.work-mode .theme-toggle:hover i,
+.work-mode .mode-toggle:hover i,
+.work-mode .layout-toggle:hover i {
+    color: var(--text-color);
+    opacity: 1;
+}
+
+/* 对话框样式 */
+.dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.dialog {
+    background: var(--card-background);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 400px;
+}
+
+.dialog h2 {
+    margin-bottom: 1.5rem;
+    color: var(--text-color);
+}
+
+.dialog input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--card-background);
+    color: var(--text-color);
+    font-size: 0.875rem;
+}
+
+.dialog input:focus {
+    outline: none;
+    border-color: var(--google-blue);
+    box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.1);
+}
+
+.dialog-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.dialog-buttons button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: calc(var(--border-radius) * 0.5);
+    cursor: pointer;
+    transition: all var(--transition-speed);
+    background: var(--card-background);
+    color: var(--text-color);
+}
+
+.dialog-buttons button:hover {
+    background: var(--google-blue);
+    color: white;
+}
+
+/* 搜索引擎下拉菜单样式 */
+.engine-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    display: none;
+    z-index: 101;
+    min-width: 100%;
+}
+
+.engine-dropdown.show {
+    display: block;
+}
+
+.engine-option {
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all var(--transition-speed);
+    text-align: center;
+}
+
+.engine-option img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    transition: all var(--transition-speed);
+}
+
+.engine-option:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.engine-option:hover img {
+    transform: scale(1.1);
+}
+
+/* 添加按钮样式优化 */
+.add-memo {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: var(--memo-color);
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    border-radius: 50%;
+    color: white;
+    opacity: 0.9;
+    transition: all var(--transition-speed);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(219, 68, 55, 0.3);
+}
+
+.add-memo:hover {
+    opacity: 1;
+    transform: scale(1.1);
+    box-shadow: 0 3px 8px rgba(219, 68, 55, 0.4);
+}
+
+.add-memo:active {
+    transform: scale(0.95);
+}
+
+.add-memo .material-icons {
+    font-size: 20px;
+}
+
+/* 一言样式优化 */
+.hitokoto-container {
+    order: 2;
+    margin: 0 auto 1rem;
+    text-align: center;
+    padding: 1.2rem 3rem;
+    opacity: 0.9;
+    transition: all var(--transition-speed);
+    background: transparent;
+    border-radius: var(--border-radius);
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    position: relative;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: top center;
+    transition: opacity 0.3s ease;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+}
+
+.hitokoto-container:hover {
+    opacity: 1;
+    transform: translateY(-2px);
+    background: var(--card-background);  /* 悬停时显示背景 */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* 装饰图标 */
+.hitokoto-container::before {
+    content: 'format_quote';  /* Material Icons 的引号图标 */
+    font-family: 'Material Icons';
+    position: absolute;
+    left: 1.5rem;
+    font-size: 1.5rem;
+    color: var(--google-blue);
+    opacity: 0.6;
+    transition: all var(--transition-speed);
+    transform: scaleX(-1);  /* 翻转图标 */
+}
+
+.hitokoto-container::after {
+    content: 'format_quote';
+    font-family: 'Material Icons';
+    position: absolute;
+    right: 1.5rem;
+    font-size: 1.5rem;
+    color: var(--google-blue);
+    opacity: 0.6;
+    transition: all var(--transition-speed);
+}
+
+.hitokoto-container:hover::before,
+.hitokoto-container:hover::after {
+    opacity: 0.8;
+    transform: scale(1.2) translateY(-2px);
+}
+
+.hitokoto-container:hover::before {
+    transform: scale(1.2) translateY(-2px) scaleX(-1);  /* 保持翻转 */
+}
+
+.hitokoto-content {
+    font-size: 1.25rem;  /* 增大字号 */
+    color: var(--text-color);
+    font-weight: 500;  /* 加粗 */
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: 0.02em;  /* 增加字间距 */
+}
+
+.hitokoto-from {
+    font-size: 1rem;
+    color: var(--text-color);
+    opacity: 0.7;
+    font-style: italic;
+    white-space: nowrap;
+    padding-left: 1.5rem;
+    border-left: 2px solid var(--shadow-color);
+    min-width: max-content;
+}
+
+/* 搜索建议容器样式 */
+.suggestions-container {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 48px;
+    right: 0;
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    border: 1.5px solid var(--border-color);
+    box-shadow: var(--card-shadow);
+    padding: 6px;
+}
+
+.suggestion-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    transition: all var(--transition-speed);
+    font-size: 14px;
+    margin: 2px 0;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid transparent;
+}
+
+/* 响应式布局调整 */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .header {
+        top: 1rem;
+        right: 0.5rem;
+    }
+
+    .shortcuts-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 1rem;
+        padding-right: 1rem;
+    }
+
+    .hitokoto-container {
+        padding: 1rem;
+    }
+
+    .search-container {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .search-box {
+        width: 100%;
+    }
+}
+
+/* 添加淡入动画 */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.container > * {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+.shortcuts-grid {
+    animation-delay: 0.2s;
+}
+
+.hitokoto-container {
+    animation-delay: 0.3s;
+}
+
+/* 布局相关的类 */
+.container.modern-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.container.classic-layout {
+    display: block;
+}
+
+/* 布局切换按钮样式 */
+.layout-toggle {
+    background: var(--card-background);
+    border: none;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all var(--transition-speed);
+}
+
+.layout-toggle:hover {
+    transform: rotate(180deg);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* 经典布局样式 */
+.classic-layout .search-container {
+    margin: 0 auto 1.5rem;
+    order: initial;
+    animation: slideDown 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.classic-layout .hitokoto-container {
+    margin-bottom: 1.5rem;
+    order: initial;
+    animation: slideDown 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+}
+
+.classic-layout .shortcuts-grid {
+    order: initial;
+    margin: 0;
+    padding-right: 3rem;
+    animation: slideDown 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.2s;
+}
+
+/* 现代布局样式 */
+.modern-layout {
+    padding-top: 0 !important; /* 移除顶部内边距 */
+}
+
+.modern-layout .search-container {
+    margin: 1.5rem auto 0; /* 添加顶部边距以对齐按钮 */
+    order: 1;
+    animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modern-layout .hitokoto-container {
+    order: 2;
+    margin: 0 auto;
+    animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+}
+
+.modern-layout .shortcuts-grid {
+    order: 3;
+    margin: 0 auto;
+    padding-right: 3rem;
+    animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) 0.2s;
+}
+
+/* 响应式布局调整 */
+@media (max-width: 768px) {
+    .modern-layout .search-container {
+        margin-top: 1rem; /* 移动端调整顶部边距 */
+    }
+}
+
+/* 定义动画关键帧 */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 确保动画只在布局切换时播放 */
+.container > * {
+    animation-fill-mode: both;
+}
+
+/* 统一按钮悬停效果 */
+.theme-toggle:hover,
+.mode-toggle:hover,
+.layout-toggle:hover {
+    transform: rotate(180deg);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* 统一按钮激活效果 */
+.theme-toggle:active,
+.mode-toggle:active,
+.layout-toggle:active {
+    transform: rotate(180deg) scale(0.95);
+}
+
+/* 工作模式样式 */
+.work-mode .shortcut-card {
+    border: 1px solid var(--border-color);
+    background: var(--card-background);
+    padding: 1.2rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.work-mode .shortcut-card:hover {
+    border-color: var(--text-secondary);
+    box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+.work-mode .shortcut-card .material-icons {
+    color: var(--text-secondary);
+    opacity: 0.8;
+    transition: all 0.3s ease;
+}
+
+.work-mode .shortcut-card:hover .material-icons {
+    color: var(--text-color);
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+/* 工作模式下的快捷方式标题样式 */
+.work-mode .shortcut-card h3 {
+    color: var(--text-secondary);
+    font-weight: 400;
+    transition: all 0.3s ease;
+}
+
+.work-mode .shortcut-card:hover h3 {
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+/* 工作模式下的快捷方式激活效果 */
+.work-mode .shortcut-card:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 4px var(--shadow-color);
+}
+
+/* 工作模式下的卡片颜色 */
+.work-mode .time-icon {
+    background: var(--text-secondary) !important;
+}
+
+.work-mode .weather-icon {
+    background: var(--text-secondary) !important;
+}
+
+.work-mode .health-icon {
+    background: var(--text-secondary) !important;
+}
+
+.work-mode .memo-icon {
+    background: var(--text-secondary) !important;
+}
+
+/* 工作模式下的卡片图标颜色 */
+.work-mode .calendar-item .material-icons {
+    color: var(--text-secondary) !important;
+}
+
+/* 工作模式下的添加按钮 */
+.work-mode .add-memo {
+    background: var(--text-secondary);
+    box-shadow: 0 2px 5px var(--shadow-color);
+}
+
+.work-mode .add-memo:hover {
+    box-shadow: 0 3px 8px var(--shadow-color);
+}
+
+/* 工作模式下的一言样式 */
+.work-mode .hitokoto-container {
+    font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    letter-spacing: 0.02em;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.work-mode .hitokoto-container:hover {
+    transform: none;
+    background: transparent;
+    box-shadow: none;
+}
+
+/* 工作模式下的一言引号颜色 */
+.work-mode .hitokoto-container::before,
+.work-mode .hitokoto-container::after {
+    color: var(--text-secondary);
+    opacity: 0.4;
+}
+
+/* 工作模式下的一言引号悬停效果 */
+.work-mode .hitokoto-container:hover::before,
+.work-mode .hitokoto-container:hover::after {
+    opacity: 0.4;
+    transform: none;
+}
+
+/* 工作模式下的一言文字样式 */
+.work-mode .hitokoto-content {
+    color: var(--text-color);
+    opacity: 0.9;
+}
+
+.work-mode .hitokoto-from {
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+/* 工作模式下的功能卡片样式 */
+.work-mode .health-card,
+.work-mode .memo-card,
+.work-mode .weather-card,
+.work-mode .time-card {
+    border: 1px solid var(--border-color);
+    box-shadow: none;
+    background: var(--card-background);
+    transition: all 0.3s ease;
+}
+
+.work-mode .health-card:hover,
+.work-mode .memo-card:hover,
+.work-mode .weather-card:hover,
+.work-mode .time-card:hover {
+    border-color: #424242;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* 工作模式下的按钮样式 */
+.work-mode .theme-toggle,
+.work-mode .mode-toggle,
+.work-mode .layout-toggle {
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    box-shadow: none;
+}
+
+.work-mode .theme-toggle:hover,
+.work-mode .mode-toggle:hover,
+.work-mode .layout-toggle:hover {
+    border-color: #424242;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* 工作模式下的文字样式 */
+.work-mode h3,
+.work-mode .time-info,
+.work-mode .weather-info,
+.work-mode .health-info,
+.work-mode .memo-info {
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+/* 工作模式下的分割线样式 */
+.work-mode .calendar {
+    border-top: 1px solid var(--border-color);
+}
+
+/* 工作模式下的搜索建议样式 */
+.work-mode .suggestions-container {
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.work-mode .suggestion-item:hover {
+    background-color: rgba(66, 66, 66, 0.08);
+    color: #424242;
+    border-color: #424242;
+}
+
+/* 添加加载状态样式 */
+.hitokoto-container.loading {
+    opacity: 0.7;
+}
+
+/* 模式切换动画 */
+.container {
+    perspective: 2000px;
+}
+
+.container.switching-mode {
+    animation: pageFlip 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center center;
+}
+
+/* 卡片翻转动画基础样式 */
+.shortcut-card,
+.time-card,
+.weather-card,
+.health-card,
+.memo-card {
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+}
+
+/* 卡片翻转动画类 */
+.card-flipping {
+    animation: cardFlip 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* 定义翻页动画 */
+@keyframes pageFlip {
+    0% {
+        transform: rotateY(0deg) translateZ(0);
+        opacity: 1;
+    }
+    50% {
+        transform: rotateY(90deg) translateZ(100px);
+        opacity: 0.5;
+    }
+    100% {
+        transform: rotateY(0deg) translateZ(0);
+        opacity: 1;
+    }
+}
+
+/* 定义卡片翻转动画 */
+@keyframes cardFlip {
+    0% {
+        transform: rotateY(0deg) translateZ(0);
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+        transform: rotateY(180deg) translateZ(50px);
+    }
+    100% {
+        transform: rotateY(360deg) translateZ(0);
+        opacity: 1;
+    }
+}
+
+/* 确保所有容器都有3D透视 */
+.container,
+.shortcuts-grid,
+.cards-container,
+.search-container,
+.hitokoto-container {
+    perspective: 2000px;
+    transform-style: preserve-3d;
+}
+
+/* 修改动画时序 */
+.card-flipping {
+    animation: cardFlip 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.container.switching-mode {
+    animation: pageFlip 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center center;
+} 
